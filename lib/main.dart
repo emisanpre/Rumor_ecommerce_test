@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'views/home/view/home_view.dart';
+import 'views/auth/view/auth_view.dart';
 
-void main() {
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MaterialApp(
     theme: ThemeData(),
-    home: const HomeView(),
+    home: const AuthView(),
   ));
 }
