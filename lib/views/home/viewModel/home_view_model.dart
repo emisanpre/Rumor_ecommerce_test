@@ -23,7 +23,7 @@ abstract class HomeViewModelBase with Store {
   late FlutterSecureStorage storage;
 
   @observable
-  late UserModel user;
+  UserModel user = UserModel(name: '', email: '');
 
   @observable
   List<ProductModel> products = [];
