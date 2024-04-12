@@ -22,9 +22,7 @@ mixin _$ProductModel {
   String get description => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
-  @JsonKey(name: 'rating_rate')
   double? get ratingRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'rating_count')
   int? get ratingCount => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -45,8 +43,8 @@ abstract class $ProductModelCopyWith<$Res> {
       String description,
       String category,
       String? image,
-      @JsonKey(name: 'rating_rate') double? ratingRate,
-      @JsonKey(name: 'rating_count') int? ratingCount});
+      double? ratingRate,
+      int? ratingCount});
 }
 
 /// @nodoc
@@ -123,8 +121,8 @@ abstract class _$$ProductModelImplCopyWith<$Res>
       String description,
       String category,
       String? image,
-      @JsonKey(name: 'rating_rate') double? ratingRate,
-      @JsonKey(name: 'rating_count') int? ratingCount});
+      double? ratingRate,
+      int? ratingCount});
 }
 
 /// @nodoc
@@ -194,8 +192,8 @@ class _$ProductModelImpl implements _ProductModel {
       required this.description,
       required this.category,
       this.image,
-      @JsonKey(name: 'rating_rate') this.ratingRate,
-      @JsonKey(name: 'rating_count') this.ratingCount});
+      this.ratingRate,
+      this.ratingCount});
 
   @override
   final int id;
@@ -210,10 +208,8 @@ class _$ProductModelImpl implements _ProductModel {
   @override
   final String? image;
   @override
-  @JsonKey(name: 'rating_rate')
   final double? ratingRate;
   @override
-  @JsonKey(name: 'rating_count')
   final int? ratingCount;
 
   @override
@@ -253,15 +249,14 @@ class _$ProductModelImpl implements _ProductModel {
 
 abstract class _ProductModel implements ProductModel {
   const factory _ProductModel(
-          {required final int id,
-          required final String title,
-          required final double price,
-          required final String description,
-          required final String category,
-          final String? image,
-          @JsonKey(name: 'rating_rate') final double? ratingRate,
-          @JsonKey(name: 'rating_count') final int? ratingCount}) =
-      _$ProductModelImpl;
+      {required final int id,
+      required final String title,
+      required final double price,
+      required final String description,
+      required final String category,
+      final String? image,
+      final double? ratingRate,
+      final int? ratingCount}) = _$ProductModelImpl;
 
   @override
   int get id;
@@ -276,10 +271,8 @@ abstract class _ProductModel implements ProductModel {
   @override
   String? get image;
   @override
-  @JsonKey(name: 'rating_rate')
   double? get ratingRate;
   @override
-  @JsonKey(name: 'rating_count')
   int? get ratingCount;
   @override
   @JsonKey(ignore: true)

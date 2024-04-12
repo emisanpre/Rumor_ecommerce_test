@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/network/dio_manager.dart';
-import '../../../core/services/product/fake_product_service.dart';
+import '../../../core/services/product/mock_product_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/widgets/product_grid.dart';
 import '../viewModel/home_view_model.dart';
@@ -15,7 +15,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final HomeViewModel _homeViewModel = HomeViewModel(FakeProductService(DioManager.instance.dio));
+  final HomeViewModel _homeViewModel = HomeViewModel(MockProductService(DioManager.instance.dio));
 
   @override
   void initState() {

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'i_product_service.dart';
 import '../../../models/product/product_model.dart';
 
-class FakeProductService extends IProductService {
-  FakeProductService(super.dio);
+class MockProductService extends IProductService {
+  MockProductService(super.dio);
 
   @override
   Future<List<ProductModel>> fetchProducts() async {

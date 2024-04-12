@@ -11,8 +11,8 @@ class ProductModel with _$ProductModel {
     required String description,
     required String category,
     String? image,
-    @JsonKey(name: 'rating_rate') double? ratingRate,
-    @JsonKey(name: 'rating_count') int? ratingCount,
+    double? ratingRate,
+    int? ratingCount,
   }) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
