@@ -75,14 +75,6 @@ mixin _$AuthViewModel on AuthViewModelBase, Store {
         .run(() => super.signUpService(name, email, password));
   }
 
-  late final _$signOutServiceAsyncAction =
-      AsyncAction('AuthViewModelBase.signOutService', context: context);
-
-  @override
-  Future<void> signOutService() {
-    return _$signOutServiceAsyncAction.run(() => super.signOutService());
-  }
-
   @override
   String toString() {
     return '''

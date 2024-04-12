@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/network/dio_manager.dart';
+import '../../../core/services/auth/mock_auth_service.dart';
 import '../../../core/services/product/mock_product_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/widgets/product_grid.dart';
+import '../../auth/view/auth_view.dart';
 import '../viewModel/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -15,7 +17,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final HomeViewModel _homeViewModel = HomeViewModel(MockProductService(DioManager.instance.dio));
+  final HomeViewModel _homeViewModel = HomeViewModel(
+    MockProductService(DioManager.instance.dio),
+    MockAuthService(DioManager.instance.dio)
+  );
 
   @override
   void initState() {
@@ -25,10 +30,10 @@ class _HomeViewState extends State<HomeView> {
   
   @override
   Widget build(BuildContext context) {
-    return _buildHomeView();
+    return _buildHomeViewStates();
   }
 
-  Observer _buildHomeView() {
+  Observer _buildHomeViewStates() {
     return Observer(
       builder: (_) {
         switch (_homeViewModel.serviceState) {
@@ -46,19 +51,79 @@ class _HomeViewState extends State<HomeView> {
                     Text("Loading..."),
                   ],
                 ),
-              ),
+              )
             );
-          case ServiceState.success:
+          case ServiceState.success || ServiceState.normal:
             return Scaffold(
-              appBar: AppBar(),
-              body: ProductGrid(products: _homeViewModel.products,),
+              appBar: AppBar(
+                title: Text("Welcome ${_homeViewModel.user.name}!"),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Alert.'),
+                            content: const Text('Do you want to log out?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await _homeViewModel.logOutService();
+                                  if(context.mounted){
+                                    Navigator.popUntil(context, (route) => route.isFirst);
+                                    
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const AuthView()),
+                                    );
+                                  }
+                                },
+                                child: const Text('Yes'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              body: ProductGrid(
+                products: _homeViewModel.products,
+              ),
             );
           case ServiceState.error:
-            return const Scaffold(
-              body: Center(
-                child: Text("Something went wrong!"),
-              ),
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Error'),
+                    content: Text(_homeViewModel.errorMessage),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          _homeViewModel.serviceState = ServiceState.normal;
+                          _homeViewModel.fetchAllProductService();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
+            return const Scaffold();
           default:
             return const SizedBox.shrink();
         }

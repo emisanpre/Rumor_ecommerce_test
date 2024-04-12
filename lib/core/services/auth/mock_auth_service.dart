@@ -47,12 +47,7 @@ class MockAuthService extends IAuthService{
   }
 
   @override
-  Future<void> signOut() async {
-    try{
-      await _userSqliteService.closeDB();
-    }
-    catch (e){
-      throw Exception('Failed to sign out: $e');
-    }
+  Future<void> logOut() async {
+    //No implementation
   }
 }

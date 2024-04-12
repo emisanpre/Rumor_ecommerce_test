@@ -2,10 +2,11 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../../../core/network/dio_manager.dart';
+import '../../../core/services/auth/mock_auth_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../home/view/home_view.dart';
 import '../viewModel/auth_view_model.dart';
-import '../viewModel/auth_view_model_factory.dart';
 
 
 class AuthView extends StatefulWidget {
@@ -16,11 +17,12 @@ class AuthView extends StatefulWidget {
 }
 
 class _AuthViewState extends State<AuthView> {
+  final AuthViewModel _authViewModel = AuthViewModel(MockAuthService(DioManager.instance.dio));
+
   final GlobalKey<FormState> _signInFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
   final PageController _pageController = PageController();
-  final AuthViewModel _authViewModel = AuthViewModelFactory.getInstance();
-
+  
   String _signInEmail = '';
   String _signInPassword = '';
 
@@ -208,6 +210,7 @@ class _AuthViewState extends State<AuthView> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               showDialog<void>(
                 context: context,
+                barrierDismissible: false,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Error'),
@@ -244,7 +247,7 @@ class _AuthViewState extends State<AuthView> {
     if(_authViewModel.serviceState == ServiceState.success && context.mounted){
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()), // Reemplaza NewView con el nombre de tu vista
+        MaterialPageRoute(builder: (context) => const HomeView()),
       );
     }
   }
@@ -260,7 +263,7 @@ class _AuthViewState extends State<AuthView> {
     if(_authViewModel.serviceState == ServiceState.success && context.mounted){
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeView()), // Reemplaza NewView con el nombre de tu vista
+        MaterialPageRoute(builder: (context) => const HomeView()),
       );
     }
   }

@@ -63,21 +63,6 @@ abstract class AuthViewModelBase with Store {
     }
   }
 
-  @action
-  Future<void> signOutService() async {
-    serviceState = ServiceState.loading;
-    try {
-      await authService.signOut();
-      serviceState = ServiceState.success;
-    } on Exception catch (e) {
-      errorMessage = e.toString().replaceAll('Exception:', '');
-      serviceState = ServiceState.error;
-    } catch (e) {
-      errorMessage = e.toString();
-      serviceState = ServiceState.error;
-    }
-  }
-
   Future<void> _init() async {
     storage = const FlutterSecureStorage(
       aOptions:  AndroidOptions(

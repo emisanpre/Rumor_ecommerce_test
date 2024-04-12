@@ -24,11 +24,6 @@ class SqliteService {
     );
   }
 
-  Future<void> closeDB() async{
-    Database db = await database;
-    db.close();
-  }
-
   Future<void> deleteDB() async {
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'ecommerce.db');
