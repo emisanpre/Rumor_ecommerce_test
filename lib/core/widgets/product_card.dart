@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/product/product_model.dart';
+import '../../views/product/view/product_view.dart';
 import 'rating_view.dart';
 
 class ProductCard extends StatelessWidget {
@@ -14,7 +15,12 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {},
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProductView(product: product)),
+        )
+      },
       child: Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start, 
