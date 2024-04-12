@@ -243,13 +243,6 @@ class _AuthViewState extends State<AuthView> {
     }
 
     await _authViewModel.signInService(_signInEmail, _signInPassword);
-
-    if(_authViewModel.serviceState == ServiceState.success && context.mounted){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
-      );
-    }
   }
 
   Future<void> _submitSignUp(BuildContext context) async {
@@ -259,12 +252,5 @@ class _AuthViewState extends State<AuthView> {
     }
 
     await _authViewModel.signUpService(_signUpName, _signUpEmail, _signUpPassword);
-
-    if(_authViewModel.serviceState == ServiceState.success && context.mounted){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeView()),
-      );
-    }
   }
 }
