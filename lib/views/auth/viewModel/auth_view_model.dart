@@ -51,7 +51,8 @@ abstract class AuthViewModelBase with Store {
     serviceState = ServiceState.loading;
     try {
       user = await authService.signUp(name, email, password);
-      storage.write(key: 'authUser', value: user!.toJson().toString());
+      String userJson = jsonEncode(user!.toJson());
+      storage.write(key: 'authUser', value: userJson);
       
       serviceState = ServiceState.success;
     } on Exception catch (e) {
