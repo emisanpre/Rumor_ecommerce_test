@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:sqflite/sqflite.dart';
 
+import '../../../models/cart_item/cart_item_model.dart';
 import '../../../models/user/user_model.dart';
 import '../../utils/encrypt.dart';
 import 'sqlite_service.dart';
@@ -22,9 +21,15 @@ class UserSqliteService extends SqliteService{
       final int userId = userMap['id'] as int;
       final String userName = userMap['name'] as String;
       final String userEmail = userMap['email'] as String;
-      final Map<int, int>? userCart = userMap['cart'] != "null" 
-        ? Map<int, int>.from(jsonDecode(userMap['cart'] as String)) 
-        : null;
+      final dynamic userCartJson = userMap['cart'] as dynamic;
+
+      List<CartItemModel>? userCart;
+      if (userCartJson != "null") {
+        userCart = [];
+        userCartJson.forEach((item) {
+          userCart!.add(CartItemModel.fromJson(item));
+        });
+      }
 
       return UserModel(id: userId, name: userName, email: userEmail, cart: userCart);
     } else {
@@ -37,15 +42,22 @@ class UserSqliteService extends SqliteService{
 
     final List<Map<String, Object?>> userMaps = await db.query('users');
 
-    return [
-      for (final {
-          'id': id as int,
-          'name': name as String,
-          'email': email as String,
-          'cart': cart as Map<int, int>,
-        } in userMaps)
-      UserModel(id: id, name: name, email: email, cart: cart),
-    ];
+    return userMaps.map((userMap) {
+      final int userId = userMap['id'] as int;
+      final String userName = userMap['name'] as String;
+      final String userEmail = userMap['email'] as String;
+      final dynamic userCartJson = userMap['cart'] as dynamic;
+
+      List<CartItemModel>? userCart;
+      if (userCartJson != "null") {
+        userCart = [];
+        userCartJson.forEach((item) {
+          userCart!.add(CartItemModel.fromJson(item));
+        });
+      }
+
+      return UserModel(id: userId, name: userName, email: userEmail, cart: userCart);
+    }).toList();
   }
 
   Future<void> insertUser(UserModel user, String password) async {

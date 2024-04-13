@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import '../cart_item/cart_item_model.dart';
+
 class UserModel{
   final int? id;
   final String name;
   final String email;
-  Map<int, int>? cart;
+  List<CartItemModel>? cart;
 
   UserModel({
     this.id,
@@ -14,13 +16,19 @@ class UserModel{
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    List<CartItemModel>? parsedCart;
+    if (json['cart'] != "null") {
+      parsedCart = [];
+      json['cart'].forEach((item) {
+        parsedCart!.add(CartItemModel.fromJson(item));
+      });
+    }
+
     return UserModel(
       id: json['id'],
       name: json['name'],
       email: json['email'],
-      cart: json['cart'] != "null" 
-        ? Map<int, int>.from(jsonDecode(json['cart'] as String)) 
-        : null,
+      cart: parsedCart,
     );
   }
 
