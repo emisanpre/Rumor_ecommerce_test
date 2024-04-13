@@ -5,7 +5,24 @@ void main(){
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    theme: ThemeData(),
+    theme: ThemeData(
+      primaryColor: Colors.lightBlue,
+      highlightColor: Colors.blueAccent,
+      appBarTheme: const AppBarTheme(
+        color: Colors.lightBlue,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white
+        )
+      ),
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+        surface: Colors.white,
+        background: Colors.white,
+      ),
+    ),
     home: const AuthView(),
   ));
 }

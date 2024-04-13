@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/rating_view.dart';
 import '../../../models/product/product_model.dart';
 
 class ProductView extends StatelessWidget {
@@ -35,36 +36,33 @@ class ProductView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
+                    'Category: ${product.category.toUpperCase()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
                     product.description,
                     style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  RatingView(
+                    value: product.ratingRate ?? 0,
+                    reviewsCount: product.ratingCount ?? 0
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Price: \$${product.price.toStringAsFixed(2)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Category: ${product.category.toUpperCase()}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  if (product.ratingRate != null && product.ratingCount != null) ...[
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${product.ratingRate} (${product.ratingCount} reviews)',
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ],
                 ],
               ),
             ),

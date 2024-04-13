@@ -22,12 +22,18 @@ class RatingView extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           '$value',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16
+          ),
         ),
         const SizedBox(width: 4),
         Text(
           '($reviewsCount reviews)',
-          style: const TextStyle(color: Colors.grey),
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 16
+          ),
         ),
       ],
     );

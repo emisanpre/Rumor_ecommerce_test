@@ -43,18 +43,21 @@ class ProductCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
-                style: Theme.of(context).textTheme.bodyMedium
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               )
             ),
-            Row(
-              children: [
-                Text("\$${product.price.toStringAsFixed(2)}",
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)
-                ),
-              ],
+            Text("\$${product.price.toStringAsFixed(2)}",
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              softWrap: false,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Theme.of(context).primaryColor,
+              ),
             ),
             RatingView(
               value: product.ratingRate ?? 0,

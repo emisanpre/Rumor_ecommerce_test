@@ -23,10 +23,4 @@ class SqliteService {
       version: 1,
     );
   }
-
-  Future<void> deleteDB() async {
-    String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'ecommerce.db');
-    await deleteDatabase(path);
-  }
 }

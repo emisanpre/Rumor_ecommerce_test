@@ -38,8 +38,8 @@ class _AuthViewState extends State<AuthView> {
           child: PageView(
             controller: _pageController,
             children: [
-              _buildSignInPage(),
-              _buildSignUpPage(),
+              _buildSignInPage(context),
+              _buildSignUpPage(context),
             ],
           ),
         ),
@@ -48,139 +48,199 @@ class _AuthViewState extends State<AuthView> {
     );
   }
 
-  Widget _buildSignInPage() {
+  Widget _buildSignInPage(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sign in"),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _signInFormKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                key: const ValueKey('signInEmail'),
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Email'),
-                initialValue: _signInEmail,
-                validator: (value) {
-                  if(value!.isEmpty){
-                    return 'Enter your email.';
-                  }
-                  if(!EmailValidator.validate(value)) {
-                    return 'Enter a valid email.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _signInEmail = value.trim();
-                  });
-                },
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "SIGN IN",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
               ),
-              TextFormField(
-                key: const ValueKey('signInPassword'),
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                initialValue: _signInPassword,
-                validator: (value) {
-                  if (value!.isEmpty || value.length < 7) {
-                    return 'The password must be at least 7 characters.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _signInPassword = value.trim();
-                  });
-                },
+            ),
+            Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: 100,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _signInFormKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            key: const ValueKey('signInEmail'),
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(labelText: 'Email'),
+                            initialValue: _signInEmail,
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return 'Enter your email.';
+                              }
+                              if(!EmailValidator.validate(value)) {
+                                return 'Enter a valid email.';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _signInEmail = value.trim();
+                              });
+                            },
+                          ),
+                          TextFormField(
+                            key: const ValueKey('signInPassword'),
+                            decoration: const InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            initialValue: _signInPassword,
+                            validator: (value) {
+                              if (value!.isEmpty || value.length < 7) {
+                                return 'The password must be at least 7 characters.';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _signInPassword = value.trim();
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _submitSignIn(context),
+                            child: const Text('Sign In'),
+                          ),
+                          TextButton(
+                            onPressed: () => _pageController.animateToPage(1, 
+                                duration: const Duration(milliseconds: 200), 
+                                curve: Curves.linear
+                              ),
+                            child: const Text("Don't you have an account? Go to sign up."),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _submitSignIn(context),
-                child: const Text('Sign In'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSignUpPage() {
+  Widget _buildSignUpPage(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sign up"),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _signUpFormKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                key: const ValueKey('signUpName'),
-                decoration: const InputDecoration(labelText: 'Name'),
-                initialValue: _signUpName,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Enter your name';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _signUpName = value.trim();
-                  });
-                },
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "SIGN UP",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
               ),
-              TextFormField(
-                key: const ValueKey('signUpEmail'),
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(labelText: 'Email'),
-                initialValue: _signUpEmail,
-                validator: (value) {
-                  if(value!.isEmpty){
-                    return 'Enter your email.';
-                  }
-                  if(!EmailValidator.validate(value)) {
-                    return 'Enter a valid email.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _signUpEmail = value.trim();
-                  });
-                },
+            ),
+            Card(
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: 100,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _signUpFormKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            key: const ValueKey('signUpName'),
+                            decoration: const InputDecoration(labelText: 'Name'),
+                            initialValue: _signUpName,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Enter your name';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _signUpName = value.trim();
+                              });
+                            },
+                          ),
+                          TextFormField(
+                            key: const ValueKey('signUpEmail'),
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(labelText: 'Email'),
+                            initialValue: _signUpEmail,
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return 'Enter your email.';
+                              }
+                              if(!EmailValidator.validate(value)) {
+                                return 'Enter a valid email.';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _signUpEmail = value.trim();
+                              });
+                            },
+                          ),
+                          TextFormField(
+                            key: const ValueKey('signUpPassword'),
+                            decoration: const InputDecoration(labelText: 'Password'),
+                            obscureText: true,
+                            initialValue: _signUpPassword,
+                            validator: (value) {
+                              if (value!.isEmpty || value.length < 7) {
+                                return 'The password must be at least 7 characters.';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                _signUpPassword = value.trim();
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _submitSignUp(context),
+                            child: const Text('Sign Up'),
+                          ),
+                          TextButton(
+                            onPressed: () => _pageController.animateToPage(0, 
+                                duration: const Duration(milliseconds: 200), 
+                                curve: Curves.linear
+                              ),
+                            child: const Text("Do you have an account? Go to sign in."),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              TextFormField(
-                key: const ValueKey('signUpPassword'),
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                initialValue: _signUpPassword,
-                validator: (value) {
-                  if (value!.isEmpty || value.length < 7) {
-                    return 'The password must be at least 7 characters.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _signUpPassword = value.trim();
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _submitSignUp(context),
-                child: const Text('Sign Up'),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
