@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../core/services/auth/i_auth_service.dart';
 import '../../../core/services/product/i_product_service.dart';
 import '../../../core/services/service_state.dart';
+import '../../../core/utils/secure_storage_helper.dart';
 import '../../../models/product/product_model.dart';
 import '../../../models/user/user_model.dart';
 
@@ -20,7 +20,6 @@ abstract class HomeViewModelBase with Store {
 
   final IProductService productService;
   final IAuthService authService;
-  late FlutterSecureStorage storage;
 
   @observable
   UserModel user = UserModel(name: '', email: '');
@@ -54,7 +53,7 @@ abstract class HomeViewModelBase with Store {
     serviceState = ServiceState.loading;
     try {
       await authService.logOut();
-      storage.delete(key: 'authUser');
+      SecureStorageHelper.deleteData(key: 'authUser');
 
       serviceState = ServiceState.success;
     } on Exception catch (e) {
@@ -67,12 +66,7 @@ abstract class HomeViewModelBase with Store {
   }
 
   Future<void> _init() async {
-    storage = const FlutterSecureStorage(
-      aOptions:  AndroidOptions(
-        encryptedSharedPreferences: true,
-      )
-    );
-    String? userString = await storage.read(key: 'authUser');
+    String? userString = await SecureStorageHelper.getData(key: 'authUser');
     user = UserModel.fromJson(jsonDecode(userString!));
   }
 }
