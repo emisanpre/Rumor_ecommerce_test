@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../core/managers/user/user_data_manager.dart';
@@ -39,7 +40,7 @@ abstract class ProductViewModelBase with Store {
         cartItem.quantity += quantity;
       }
       else{
-        user.cart.add(CartItemModel(userId: user.id!, productId: product.id, quantity: quantity));
+        user.cart.add(CartItemModel(id: UniqueKey().toString(), userId: user.id, productId: product.id, quantity: quantity));
       }
       
       await authService.updateUser(user);

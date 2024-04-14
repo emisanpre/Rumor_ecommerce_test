@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
 import '../../../models/user/user_model.dart';
 import '../sqlite/user_sqlite_service.dart';
 import 'i_auth_service.dart';
@@ -37,9 +39,10 @@ class MockAuthService extends IAuthService{
         throw Exception('User already exists');
       }
 
-      await _userSqliteService.insertUser(UserModel(name: name, email: email), password);
-      UserModel? newUser = await _userSqliteService.user(email);
-      return newUser!;
+      UserModel newUser = UserModel(id: UniqueKey().toString(), name: name, email: email);
+      await _userSqliteService.insertUser(newUser, password);
+
+      return newUser;
     }
     catch (e){
       throw Exception('Failed to sign up: $e');

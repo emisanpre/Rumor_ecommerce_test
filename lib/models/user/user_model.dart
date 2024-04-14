@@ -8,12 +8,12 @@ part 'user_model.g.dart';
 @JsonSerializable()
 class UserModel extends _UserModel with _$UserModel {
   UserModel({
-    int? id,
+    required String id,
     required String name,
     required String email,
     List<CartItemModel>? cart
   }){
-    if (id != null) this.id = id;
+    this.id = id;
     this.name = name;
     this.email = email;
     if (cart != null) this.cart = ObservableList.of(cart);
@@ -24,13 +24,13 @@ class UserModel extends _UserModel with _$UserModel {
 
 abstract class _UserModel with Store{
   @observable
-  int? id;
+  String id = '';
 
   @observable
-  String name = "";
+  String name = '';
 
   @observable
-  String email = "";
+  String email = '';
 
   @observable
   ObservableList<CartItemModel> cart = ObservableList.of([]);

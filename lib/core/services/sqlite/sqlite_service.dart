@@ -17,11 +17,11 @@ class SqliteService {
       join(path, 'ecommerce.db'),
       onCreate: (db, version) {
         db.execute(
-          'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT)',
+          'CREATE TABLE users(id TEXT PRIMARY KEY, name TEXT, email TEXT, password TEXT)',
         );
 
         db.execute(
-          'CREATE TABLE cart_items(id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, productID INTEGER, quantity INTEGER)',
+          'CREATE TABLE cartItems(id TEXT PRIMARY KEY, userId TEXT, productId INTEGER, quantity INTEGER)',
         );
       },
       version: 1,

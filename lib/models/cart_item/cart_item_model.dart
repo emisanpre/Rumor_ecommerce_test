@@ -6,12 +6,12 @@ part 'cart_item_model.g.dart';
 @JsonSerializable()
 class CartItemModel extends _CartItemModel with _$CartItemModel {
   CartItemModel({
-    int? id,
-    required int userId,
+    required String id,
+    required String userId,
     required int productId,
     required int quantity,
   }){
-    if (id != null) this.id = id;
+    this.id = id;
     this.userId = userId;
     this.productId = productId;
     this.quantity = quantity;
@@ -22,10 +22,10 @@ class CartItemModel extends _CartItemModel with _$CartItemModel {
 
 abstract class _CartItemModel with Store {
   @observable
-  int? id = 0;
+  String id = '';
 
   @observable
-  int userId = 0;
+  String userId = '';
 
   @observable
   int productId = 0;

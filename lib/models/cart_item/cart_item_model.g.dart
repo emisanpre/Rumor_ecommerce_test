@@ -8,8 +8,8 @@ part of 'cart_item_model.dart';
 
 CartItemModel _$CartItemModelFromJson(Map<String, dynamic> json) =>
     CartItemModel(
-      id: json['id'] as int?,
-      userId: json['userId'] as int,
+      id: json['id'] as String,
+      userId: json['userId'] as String,
       productId: json['productId'] as int,
       quantity: json['quantity'] as int,
     );
@@ -32,13 +32,13 @@ mixin _$CartItemModel on _CartItemModel, Store {
   late final _$idAtom = Atom(name: '_CartItemModel.id', context: context);
 
   @override
-  int? get id {
+  String get id {
     _$idAtom.reportRead();
     return super.id;
   }
 
   @override
-  set id(int? value) {
+  set id(String value) {
     _$idAtom.reportWrite(value, super.id, () {
       super.id = value;
     });
@@ -48,13 +48,13 @@ mixin _$CartItemModel on _CartItemModel, Store {
       Atom(name: '_CartItemModel.userId', context: context);
 
   @override
-  int get userId {
+  String get userId {
     _$userIdAtom.reportRead();
     return super.userId;
   }
 
   @override
-  set userId(int value) {
+  set userId(String value) {
     _$userIdAtom.reportWrite(value, super.userId, () {
       super.userId = value;
     });

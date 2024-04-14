@@ -18,25 +18,23 @@ class UserSqliteService extends SqliteService{
 
     if (userMaps.isNotEmpty) {
       final userMap = userMaps.first;
-      final int userId = userMap['id'] as int;
+      final editableUserMap = Map.of(userMap);
 
       final List<Map<String, Object?>> cartMaps = await db.query(
-        'cart_items',
+        'cartItems',
         where: 'userId = ?',
-        whereArgs: [userId],
+        whereArgs: [editableUserMap['id']],
       );
 
-      List<CartItemModel>? userCart;
+      List<dynamic> userCart = [];
       if(cartMaps.isNotEmpty){
         for (final cartMap in cartMaps) {
-          userCart = [];
-          final cartItem = CartItemModel.fromJson(cartMap);
-          userCart.add(cartItem);
+          userCart.add(cartMap);
         }
-        userMap['cart'] = userCart;
+        editableUserMap['cart'] = userCart;
       }
       
-      return UserModel.fromJson(userMap);
+      return UserModel.fromJson(editableUserMap);
     } else {
       return null;
     }
@@ -50,7 +48,7 @@ class UserSqliteService extends SqliteService{
 
     for (final cartItem in userData['cart']) {
       await db.insert(
-        'cart_items', 
+        'cartItems', 
         cartItem,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -74,14 +72,27 @@ class UserSqliteService extends SqliteService{
       userData['password'] = Encrypt.encrypt(password);
     }
 
-    //TODO: FIX BUG
     for (final cartItem in userData['cart']) {
-      await db.update(
-        'cart_items', 
-        cartItem.toJson(),
+      var existingItem = await db.query(
+        'cartItems',
         where: 'id = ?',
         whereArgs: [cartItem.id],
       );
+
+      if (existingItem.isNotEmpty) {
+        await db.update(
+          'cartItems', 
+          cartItem.toJson(),
+          where: 'id = ?',
+          whereArgs: [cartItem.id]
+        );
+      } else {
+        await db.insert(
+          'cartItems',
+          cartItem.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace
+        );
+      }
     }
 
     userData.remove('cart');
