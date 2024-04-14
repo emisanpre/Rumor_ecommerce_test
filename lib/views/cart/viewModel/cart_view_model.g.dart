@@ -67,6 +67,15 @@ mixin _$CartViewModel on CartViewModelBase, Store {
         .run(() => super.fetchCartProductsService());
   }
 
+  late final _$decrementQuantityAsyncAction =
+      AsyncAction('CartViewModelBase.decrementQuantity', context: context);
+
+  @override
+  Future<void> decrementQuantity(int index) {
+    return _$decrementQuantityAsyncAction
+        .run(() => super.decrementQuantity(index));
+  }
+
   late final _$updateUserServiceAsyncAction =
       AsyncAction('CartViewModelBase.updateUserService', context: context);
 
@@ -84,17 +93,6 @@ mixin _$CartViewModel on CartViewModelBase, Store {
         name: 'CartViewModelBase.incrementQuantity');
     try {
       return super.incrementQuantity(index);
-    } finally {
-      _$CartViewModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void decrementQuantity(int index) {
-    final _$actionInfo = _$CartViewModelBaseActionController.startAction(
-        name: 'CartViewModelBase.decrementQuantity');
-    try {
-      return super.decrementQuantity(index);
     } finally {
       _$CartViewModelBaseActionController.endAction(_$actionInfo);
     }

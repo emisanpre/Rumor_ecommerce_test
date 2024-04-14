@@ -104,6 +104,16 @@ class UserSqliteService extends SqliteService{
     );
   }
 
+  Future<void> deleteCartItem(CartItemModel cartItem) async {
+    final db = await database;
+
+    await db.delete(
+      'cartItems',
+      where: 'id = ?',
+      whereArgs: [cartItem.id],
+    );
+  }
+
   Future<bool> verifyCredentials(String email, String password) async {
     final db = await database;
 

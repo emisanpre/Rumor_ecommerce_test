@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../models/cart_item/cart_item_model.dart';
 import '../../../models/user/user_model.dart';
 import '../sqlite/user_sqlite_service.dart';
 import 'i_auth_service.dart';
@@ -61,6 +62,16 @@ class MockAuthService extends IAuthService{
     }
     catch (e){
       throw Exception('Failed to update user: $e');
+    } 
+  }
+
+  @override
+  Future<void> deleteUserCartItem(CartItemModel cartItem) async {
+    try{
+      await _userSqliteService.deleteCartItem(cartItem);
+    }
+    catch (e){
+      throw Exception('Failed to delete cart item: $e');
     } 
   }
 }

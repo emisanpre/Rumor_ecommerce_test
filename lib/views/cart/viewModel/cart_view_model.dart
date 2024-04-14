@@ -61,13 +61,14 @@ abstract class CartViewModelBase with Store {
   }
 
   @action
-  void decrementQuantity(int index) {
+  Future<void> decrementQuantity(int index) async {
     UserModel user = UserDataManager.user!;
     if (index >= 0 &&
         index < user.cart.length &&
         user.cart[index].quantity > 0) {
       user.cart[index].quantity--;
       if (user.cart[index].quantity == 0) {
+        await authService.deleteUserCartItem(user.cart[index]);
         products.removeAt(index);
         user.cart.removeAt(index);
       }

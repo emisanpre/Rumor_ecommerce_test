@@ -179,7 +179,7 @@ class ProductView extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Cancelar'),
+                  child: const Text('Cancel'),
                 ),
               ],
             );
