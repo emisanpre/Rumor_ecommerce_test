@@ -33,7 +33,9 @@ class _CartViewState extends State<CartView> {
         switch (_cartViewModel.serviceState) {
           case ServiceState.loading:
             return Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                title: const Text('Shopping cart'),
+              ),
               body: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
