@@ -68,10 +68,51 @@ abstract class CartViewModelBase with Store {
         user.cart[index].quantity > 0) {
       user.cart[index].quantity--;
       if (user.cart[index].quantity == 0) {
-        await authService.deleteUserCartItem(user.cart[index]);
-        products.removeAt(index);
-        user.cart.removeAt(index);
+        deleteItem(index);
       }
+    }
+  }
+
+  @action
+  Future<void> deleteItem(int index) async {
+    UserModel user = UserDataManager.user!;
+    if (index >= 0 && index < user.cart.length) {
+      await authService.deleteUserCartItem(user.cart[index]);
+      products.removeAt(index);
+      user.cart.removeAt(index);
+      updateUserService();
+    }
+  }
+
+  @action
+  double calulateTotal(){
+    double total = 0.0;
+    for (var item in products) {
+      total += item.price * UserDataManager.user!.cart[products.indexOf(item)].quantity;
+    }
+    return total;
+  }
+
+  @action
+  Future<void> checkOut() async{
+    try {
+      products.clear();
+
+      UserModel user = UserDataManager.user!;
+      for (var cartItem in user.cart) {
+        await authService.deleteUserCartItem(cartItem);
+      }
+      user.cart.clear();
+
+      updateUserService();
+
+      serviceState = ServiceState.success;
+    } on Exception catch (e) {
+      errorMessage = e.toString().replaceAll('Exception:', '');
+      serviceState = ServiceState.error;
+    } catch (e) {
+      errorMessage = e.toString();
+      serviceState = ServiceState.error;
     }
   }
 

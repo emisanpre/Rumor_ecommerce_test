@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/managers/user/user_data_manager.dart';
@@ -60,6 +61,7 @@ class _CartViewState extends State<CartView> {
                   ? Column(
                     children: [
                       Expanded(
+                        flex: 5,
                         child: ListView.builder(
                           padding: const EdgeInsets.all(5),
                           itemCount: _cartViewModel.products.length,
@@ -67,7 +69,21 @@ class _CartViewState extends State<CartView> {
                             return Card(
                               child: ListTile(
                                 title: Text(_cartViewModel.products[index].title),
-                                subtitle: Text('Quantity: ${UserDataManager.user!.cart[index].quantity}'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10,),
+                                    Text('Quantity: ${UserDataManager.user!.cart[index].quantity}'),
+                                    Text('Price: \$${(_cartViewModel.products[index].price * UserDataManager.user!.cart[index].quantity).toStringAsFixed(2)}'),
+                                  ],
+                                ),
+                                leading: IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _cartViewModel.deleteItem(index);
+                                    setState(() {});
+                                  },
+                                ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -90,6 +106,47 @@ class _CartViewState extends State<CartView> {
                               ),
                             );
                           },
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          color: Theme.of(context).primaryColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                const Text(
+                                  "Total: ",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  "\$${_cartViewModel.calulateTotal().toStringAsFixed(2)}",
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Spacer(),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await _cartViewModel.checkOut();
+                                    if(context.mounted) Navigator.pop(context);
+                                  }, 
+                                  child: const Text(
+                                    "Check out",
+                                    style: TextStyle(
+                                      fontSize: 20
+                                    ),
+                                  )
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],

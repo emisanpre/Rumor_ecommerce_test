@@ -76,6 +76,22 @@ mixin _$CartViewModel on CartViewModelBase, Store {
         .run(() => super.decrementQuantity(index));
   }
 
+  late final _$deleteItemAsyncAction =
+      AsyncAction('CartViewModelBase.deleteItem', context: context);
+
+  @override
+  Future<void> deleteItem(int index) {
+    return _$deleteItemAsyncAction.run(() => super.deleteItem(index));
+  }
+
+  late final _$checkOutAsyncAction =
+      AsyncAction('CartViewModelBase.checkOut', context: context);
+
+  @override
+  Future<void> checkOut() {
+    return _$checkOutAsyncAction.run(() => super.checkOut());
+  }
+
   late final _$updateUserServiceAsyncAction =
       AsyncAction('CartViewModelBase.updateUserService', context: context);
 
@@ -93,6 +109,17 @@ mixin _$CartViewModel on CartViewModelBase, Store {
         name: 'CartViewModelBase.incrementQuantity');
     try {
       return super.incrementQuantity(index);
+    } finally {
+      _$CartViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  double calulateTotal() {
+    final _$actionInfo = _$CartViewModelBaseActionController.startAction(
+        name: 'CartViewModelBase.calulateTotal');
+    try {
+      return super.calulateTotal();
     } finally {
       _$CartViewModelBaseActionController.endAction(_$actionInfo);
     }
