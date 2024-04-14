@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/services/auth/i_auth_service.dart';
 import '../../../core/services/product/i_product_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/utils/secure_storage_helper.dart';
-import '../../../models/cart_item/cart_item_model.dart';
 import '../../../models/product/product_model.dart';
 import '../../../models/user/user_model.dart';
 
@@ -16,17 +16,11 @@ class CartViewModel = CartViewModelBase with _$CartViewModel;
 
 abstract class CartViewModelBase with Store {
   CartViewModelBase(this.productService, this.authService){
-    _init();
+    fetchCartProductsService();
   }
 
   final IProductService productService;
   final IAuthService authService;
-
-  @observable
-  UserModel user = UserModel(name: '', email: '');
-
-  @observable
-  ObservableList<CartItemModel>? userCart;
 
   @observable
   List<ProductModel> products = [];
@@ -39,15 +33,12 @@ abstract class CartViewModelBase with Store {
 
   @action
   Future<void> fetchCartProductsService() async {
-    if(userCart == null){
-      serviceState = ServiceState.success;
-      return;
-    } 
+    UserModel user = UserDataManager.user!;
 
     serviceState = ServiceState.loading;
     try {
-      for (var i = 0; i < userCart!.length; i++) {
-        products.add(await productService.fetchProduct(userCart![i].productId));
+      for (var i = 0; i < user.cart.length; i++) {
+        products.add(await productService.fetchProduct(user.cart[i].productId));
       }
       
       serviceState = ServiceState.success;
@@ -62,23 +53,23 @@ abstract class CartViewModelBase with Store {
 
   @action
   void incrementQuantity(int index) {
-    if (userCart != null &&
-        index >= 0 &&
-        index < userCart!.length) {
-      userCart![index].quantity++;
+    UserModel user = UserDataManager.user!;
+    if (index >= 0 &&
+        index < user.cart.length) {
+      user.cart[index].quantity++;
     }
   }
 
   @action
   void decrementQuantity(int index) {
-    if (userCart != null &&
-        index >= 0 &&
-        index < userCart!.length &&
-        userCart![index].quantity > 0) {
-      userCart![index].quantity--;
-      if (userCart![index].quantity == 0) {
+    UserModel user = UserDataManager.user!;
+    if (index >= 0 &&
+        index < user.cart.length &&
+        user.cart[index].quantity > 0) {
+      user.cart[index].quantity--;
+      if (user.cart[index].quantity == 0) {
         products.removeAt(index);
-        userCart!.removeAt(index);
+        user.cart.removeAt(index);
       }
     }
   }
@@ -87,7 +78,7 @@ abstract class CartViewModelBase with Store {
   Future<void> updateUserService() async {
     serviceState = ServiceState.loading;
     try {
-      user.cart = userCart;
+      UserModel user = UserDataManager.user!;
       await authService.updateUser(user);
       String userJson = jsonEncode(user.toJson());
       SecureStorageHelper.saveData(key: 'authUser', value: userJson);
@@ -100,14 +91,5 @@ abstract class CartViewModelBase with Store {
       errorMessage = e.toString();
       serviceState = ServiceState.error;
     }
-  }
-
-  Future<void> _init() async {
-    String? userString = await SecureStorageHelper.getData(key: 'authUser');
-    user = UserModel.fromJson(jsonDecode(userString!));
-    if(user.cart != null){
-      userCart = ObservableList.of(user.cart!);
-    }
-    fetchCartProductsService();
   }
 }

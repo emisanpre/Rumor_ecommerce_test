@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/services/auth/i_auth_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/utils/secure_storage_helper.dart';
@@ -14,18 +15,10 @@ part 'product_view_model.g.dart';
 class ProductViewModel = ProductViewModelBase with _$ProductViewModel;
 
 abstract class ProductViewModelBase with Store {
-  ProductViewModelBase(this.authService, this.product){
-    _init();
-  }
+  ProductViewModelBase(this.authService, this.product);
 
   final IAuthService authService;
   final ProductModel product;
-
-  @observable
-  UserModel user = UserModel(name: '', email: '');
-
-  @observable
-  ObservableList<CartItemModel>? userCart;
 
   @observable
   int quantity = 1;
@@ -38,24 +31,17 @@ abstract class ProductViewModelBase with Store {
 
   @action
   Future<void> updateUserCartService() async {
+    UserModel user = UserDataManager.user!;
     serviceState = ServiceState.loading;
     try {
-      if (userCart != null) {
-        CartItemModel? cartItem =  userCart!.where((cartItem) => cartItem.productId == product.id).firstOrNull;
-        if (cartItem != null) {
-          cartItem.quantity += quantity;
-        }
-        else{
-          userCart!.add(CartItemModel(productId: product.id, quantity: quantity));
-        }
+      CartItemModel? cartItem =  user.cart.where((cartItem) => cartItem.productId == product.id).firstOrNull;
+      if (cartItem != null) {
+        cartItem.quantity += quantity;
       }
       else{
-        userCart = ObservableList.of([
-          CartItemModel(productId: product.id, quantity: quantity)
-        ]);
+        user.cart.add(CartItemModel(userId: user.id!, productId: product.id, quantity: quantity));
       }
       
-      user.cart = userCart;
       await authService.updateUser(user);
       String userJson = jsonEncode(user.toJson());
       SecureStorageHelper.saveData(key: 'authUser', value: userJson);
@@ -67,14 +53,6 @@ abstract class ProductViewModelBase with Store {
     } catch (e) {
       errorMessage = e.toString();
       serviceState = ServiceState.error;
-    }
-  }
-
-  Future<void> _init() async {
-    String? userString = await SecureStorageHelper.getData(key: 'authUser');
-    user = UserModel.fromJson(jsonDecode(userString!));
-    if(user.cart != null){
-      userCart = ObservableList.of(user.cart!);
     }
   }
 }

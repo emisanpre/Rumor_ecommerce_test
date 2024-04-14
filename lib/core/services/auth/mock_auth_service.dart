@@ -37,9 +37,9 @@ class MockAuthService extends IAuthService{
         throw Exception('User already exists');
       }
 
-      UserModel newUser = UserModel(name: name, email: email);
-      await _userSqliteService.insertUser(newUser, password);
-      return newUser;
+      await _userSqliteService.insertUser(UserModel(name: name, email: email), password);
+      UserModel? newUser = await _userSqliteService.user(email);
+      return newUser!;
     }
     catch (e){
       throw Exception('Failed to sign up: $e');
@@ -57,7 +57,7 @@ class MockAuthService extends IAuthService{
       await _userSqliteService.updateUser(user);
     }
     catch (e){
-      throw Exception('Failed to sign up: $e');
+      throw Exception('Failed to update user: $e');
     } 
   }
 }

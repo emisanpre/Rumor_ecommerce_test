@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/services/auth/i_auth_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/utils/secure_storage_helper.dart';
@@ -19,7 +20,7 @@ abstract class AuthViewModelBase with Store {
   final IAuthService authService;
 
   @observable
-  UserModel? user;
+  bool isAuth = false;
 
   @observable
   ServiceState serviceState = ServiceState.normal;
@@ -31,9 +32,11 @@ abstract class AuthViewModelBase with Store {
   Future<void> signInService(String email, String password) async {
     serviceState = ServiceState.loading;
     try {
-      user = await authService.signIn(email, password);
-      String userJson = jsonEncode(user!.toJson());
+      UserDataManager.user = await authService.signIn(email, password);
+      String userJson = jsonEncode(UserDataManager.user!.toJson());
       SecureStorageHelper.saveData(key: 'authUser', value: userJson);
+
+      isAuth = true;
 
       serviceState = ServiceState.success;
     }on Exception catch (e) {
@@ -49,9 +52,11 @@ abstract class AuthViewModelBase with Store {
   Future<void> signUpService(String name, String email, String password) async {
     serviceState = ServiceState.loading;
     try {
-      user = await authService.signUp(name, email, password);
-      String userJson = jsonEncode(user!.toJson());
+      UserDataManager.user = await authService.signUp(name, email, password);
+      String userJson = jsonEncode(UserDataManager.user!.toJson());
       SecureStorageHelper.saveData(key: 'authUser', value: userJson);
+      
+      isAuth = true;
       
       serviceState = ServiceState.success;
     } on Exception catch (e) {
@@ -66,7 +71,11 @@ abstract class AuthViewModelBase with Store {
   Future<void> _init() async {
     String? userString = await SecureStorageHelper.getData(key: 'authUser');
     userString != null 
-      ? user = UserModel.fromJson(jsonDecode(userString))
-      : user = null;
+      ? UserDataManager.user = UserModel.fromJson(jsonDecode(userString))
+      : UserDataManager.user = null;
+
+    if(UserDataManager.user != null){
+      isAuth = true;
+    }
   }
 }

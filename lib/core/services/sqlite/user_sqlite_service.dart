@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:sqflite/sqflite.dart';
 
 import '../../../models/cart_item/cart_item_model.dart';
@@ -21,45 +19,27 @@ class UserSqliteService extends SqliteService{
     if (userMaps.isNotEmpty) {
       final userMap = userMaps.first;
       final int userId = userMap['id'] as int;
-      final String userName = userMap['name'] as String;
-      final String userEmail = userMap['email'] as String;
-      final dynamic userCartJson = userMap['cart'] as dynamic;
+
+      final List<Map<String, Object?>> cartMaps = await db.query(
+        'cart_items',
+        where: 'userId = ?',
+        whereArgs: [userId],
+      );
 
       List<CartItemModel>? userCart;
-      if (userCartJson != "null") {
-        userCart = [];
-        jsonDecode(userCartJson).forEach((item) {
-          userCart!.add(CartItemModel.fromJson(item));
-        });
+      if(cartMaps.isNotEmpty){
+        for (final cartMap in cartMaps) {
+          userCart = [];
+          final cartItem = CartItemModel.fromJson(cartMap);
+          userCart.add(cartItem);
+        }
+        userMap['cart'] = userCart;
       }
-
-      return UserModel(id: userId, name: userName, email: userEmail, cart: userCart);
+      
+      return UserModel.fromJson(userMap);
     } else {
       return null;
     }
-  }
-
-  Future<List<UserModel>> users() async {
-    final db = await database;
-
-    final List<Map<String, Object?>> userMaps = await db.query('users');
-
-    return userMaps.map((userMap) {
-      final int userId = userMap['id'] as int;
-      final String userName = userMap['name'] as String;
-      final String userEmail = userMap['email'] as String;
-      final dynamic userCartJson = userMap['cart'] as dynamic;
-
-      List<CartItemModel>? userCart;
-      if (userCartJson != "null") {
-        userCart = [];
-        jsonDecode(userCartJson).forEach((item) {
-          userCart!.add(CartItemModel.fromJson(item));
-        });
-      }
-
-      return UserModel(id: userId, name: userName, email: userEmail, cart: userCart);
-    }).toList();
   }
 
   Future<void> insertUser(UserModel user, String password) async {
@@ -68,11 +48,21 @@ class UserSqliteService extends SqliteService{
     Map<String, dynamic> userData = user.toJson();
     userData['password'] = Encrypt.encrypt(password);
 
+    for (final cartItem in userData['cart']) {
+      await db.insert(
+        'cart_items', 
+        cartItem,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+
+    userData.remove('cart');
     await db.insert(
       'users', 
       userData,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+
   }
 
   Future<void> updateUser(UserModel user, {String? password}) async {
@@ -84,21 +74,22 @@ class UserSqliteService extends SqliteService{
       userData['password'] = Encrypt.encrypt(password);
     }
 
+    //TODO: FIX BUG
+    for (final cartItem in userData['cart']) {
+      await db.update(
+        'cart_items', 
+        cartItem.toJson(),
+        where: 'id = ?',
+        whereArgs: [cartItem.id],
+      );
+    }
+
+    userData.remove('cart');
     await db.update(
       'users',
       userData,
       where: 'id = ?',
       whereArgs: [user.id],
-    );
-  }
-
-  Future<void> deleteUser(int id) async {
-    final db = await database;
-
-    await db.delete(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
     );
   }
 
@@ -112,10 +103,8 @@ class UserSqliteService extends SqliteService{
     );
 
     if (userMaps.isNotEmpty) {
-      final String? hashedPassword = userMaps.first['password'] as String?;
-      if (hashedPassword != null) {
-        return Encrypt.verifyEncrypted(password, hashedPassword);
-      }
+      final String hashedPassword = userMaps.first['password'] as String;
+      return Encrypt.verifyEncrypted(password, hashedPassword);
     }
 
     return false;

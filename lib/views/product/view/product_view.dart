@@ -123,11 +123,9 @@ class ProductView extends StatelessWidget {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
-                          _productViewModel.serviceState = ServiceState.normal;
-                          _productViewModel.updateUserCartService();
-                          Navigator.of(context).pop();
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
-                        child: const Text('Retry'),
+                        child: const Text('Ok'),
                       ),
                     ],
                   );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/network/dio_manager.dart';
 import '../../../core/services/auth/mock_auth_service.dart';
 import '../../../core/services/product/mock_product_service.dart';
@@ -10,38 +11,27 @@ import '../../auth/view/auth_view.dart';
 import '../../cart/view/cart_view.dart';
 import '../viewModel/home_view_model.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class HomeView extends StatelessWidget {
+  HomeView({super.key});
 
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
   final HomeViewModel _homeViewModel = HomeViewModel(
     MockProductService(DioManager.instance.dio),
     MockAuthService(DioManager.instance.dio)
   );
 
   @override
-  void initState() {
-    super.initState();
-    _homeViewModel.fetchAllProductService();
-  }
-  
-  @override
   Widget build(BuildContext context) {
-    return _buildHomeView();
+    return _buildHomeView(context);
   }
 
-  Observer _buildHomeView(){
+  Observer _buildHomeView(BuildContext context){
     return Observer(
       builder: (_){
         switch (_homeViewModel.serviceState) {
           case ServiceState.loading:
             return Scaffold(
               appBar: AppBar(
-                title: Text("Welcome ${_homeViewModel.user.name}!"),
+                title: Text("Welcome ${UserDataManager.user!.name}!"),
               ),
               body: const Center(
                 child: Column(
@@ -61,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
             return Scaffold(
               extendBody: true,
               appBar: AppBar(
-                title: Text("Welcome ${_homeViewModel.user.name}!"),
+                title: Text("Welcome ${UserDataManager.user!.name}!"),
               ),
               body: ProductGrid(
                 products: _homeViewModel.products,
@@ -81,14 +71,14 @@ class _HomeViewState extends State<HomeView> {
                     shape: const CircleBorder(),
                     child: const Icon(Icons.shopping_cart),
                   ),
-                  if (_homeViewModel.user.cart != null && _homeViewModel.user.cart!.isNotEmpty)
+                  if (UserDataManager.user!.cart.isNotEmpty)
                     Positioned(
                       right: 0,
                       child: CircleAvatar(
                         radius: 10,
                         backgroundColor: Colors.red,
                         child: Text(
-                          _homeViewModel.user.cart!.length.toString(),
+                          UserDataManager.user!.cart.length.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,

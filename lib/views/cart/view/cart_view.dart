@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/network/dio_manager.dart';
 import '../../../core/services/auth/mock_auth_service.dart';
 import '../../../core/services/product/mock_product_service.dart';
@@ -66,7 +67,7 @@ class _CartViewState extends State<CartView> {
                             return Card(
                               child: ListTile(
                                 title: Text(_cartViewModel.products[index].title),
-                                subtitle: Text('Quantity: ${_cartViewModel.userCart![index].quantity}'),
+                                subtitle: Text('Quantity: ${UserDataManager.user!.cart[index].quantity}'),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -106,26 +107,26 @@ class _CartViewState extends State<CartView> {
               ),
             );
           case ServiceState.error:
-            showDialog<void>(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Error'),
-                  content: Text(_cartViewModel.errorMessage),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        _cartViewModel.serviceState = ServiceState.normal;
-                        _cartViewModel.fetchCartProductsService();
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                );
-              },
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Error'),
+                    content: Text(_cartViewModel.errorMessage),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        child: const Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            });
           return const Scaffold();
           default:
             return Scaffold(

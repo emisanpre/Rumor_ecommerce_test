@@ -16,8 +16,12 @@ class SqliteService {
     return openDatabase(
       join(path, 'ecommerce.db'),
       onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, cart TEXT, password TEXT)',
+        db.execute(
+          'CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT)',
+        );
+
+        db.execute(
+          'CREATE TABLE cart_items(id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, productID INTEGER, quantity INTEGER)',
         );
       },
       version: 1,

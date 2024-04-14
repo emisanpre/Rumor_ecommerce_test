@@ -9,38 +9,6 @@ part of 'cart_view_model.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CartViewModel on CartViewModelBase, Store {
-  late final _$userAtom =
-      Atom(name: 'CartViewModelBase.user', context: context);
-
-  @override
-  UserModel get user {
-    _$userAtom.reportRead();
-    return super.user;
-  }
-
-  @override
-  set user(UserModel value) {
-    _$userAtom.reportWrite(value, super.user, () {
-      super.user = value;
-    });
-  }
-
-  late final _$userCartAtom =
-      Atom(name: 'CartViewModelBase.userCart', context: context);
-
-  @override
-  ObservableList<CartItemModel>? get userCart {
-    _$userCartAtom.reportRead();
-    return super.userCart;
-  }
-
-  @override
-  set userCart(ObservableList<CartItemModel>? value) {
-    _$userCartAtom.reportWrite(value, super.userCart, () {
-      super.userCart = value;
-    });
-  }
-
   late final _$productsAtom =
       Atom(name: 'CartViewModelBase.products', context: context);
 
@@ -135,8 +103,6 @@ mixin _$CartViewModel on CartViewModelBase, Store {
   @override
   String toString() {
     return '''
-user: ${user},
-userCart: ${userCart},
 products: ${products},
 serviceState: ${serviceState},
 errorMessage: ${errorMessage}

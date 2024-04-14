@@ -1,43 +1,37 @@
-import 'dart:convert';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:mobx/mobx.dart';
 
 import '../cart_item/cart_item_model.dart';
 
-class UserModel{
-  final int? id;
-  final String name;
-  final String email;
-  List<CartItemModel>? cart;
+part 'user_model.g.dart';
 
+@JsonSerializable()
+class UserModel extends _UserModel with _$UserModel {
   UserModel({
-    this.id,
-    required this.name,
-    required this.email,
-    this.cart
-  });
-
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    List<CartItemModel>? parsedCart;
-    if (json['cart'] != "null") {
-      parsedCart = [];
-      jsonDecode(json['cart']).forEach((item) {
-        parsedCart!.add(CartItemModel.fromJson(item));
-      });
-    }
-
-    return UserModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      cart: parsedCart,
-    );
+    int? id,
+    required String name,
+    required String email,
+    List<CartItemModel>? cart
+  }){
+    if (id != null) this.id = id;
+    this.name = name;
+    this.email = email;
+    if (cart != null) this.cart = ObservableList.of(cart);
   }
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'cart': jsonEncode(cart),
-    };
-  }
+abstract class _UserModel with Store{
+  @observable
+  int? id;
+
+  @observable
+  String name = "";
+
+  @observable
+  String email = "";
+
+  @observable
+  ObservableList<CartItemModel> cart = ObservableList.of([]);
 }
