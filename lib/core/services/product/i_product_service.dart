@@ -7,4 +7,5 @@ abstract class IProductService {
   IProductService(this.dio);
 
   Future<List<ProductModel>> fetchProducts();
+  Future<ProductModel> fetchProduct(int id);
 }

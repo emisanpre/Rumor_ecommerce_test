@@ -18,6 +18,9 @@ void main(){
           color: Colors.white
         )
       ),
+      bottomAppBarTheme: const BottomAppBarTheme(
+        color: Colors.lightBlue,
+      ),
       colorScheme: ColorScheme.fromSwatch().copyWith(
         surface: Colors.white,
         background: Colors.white,

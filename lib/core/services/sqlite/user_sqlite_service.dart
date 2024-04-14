@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 
 import '../../../models/cart_item/cart_item_model.dart';
@@ -26,7 +28,7 @@ class UserSqliteService extends SqliteService{
       List<CartItemModel>? userCart;
       if (userCartJson != "null") {
         userCart = [];
-        userCartJson.forEach((item) {
+        jsonDecode(userCartJson).forEach((item) {
           userCart!.add(CartItemModel.fromJson(item));
         });
       }
@@ -51,7 +53,7 @@ class UserSqliteService extends SqliteService{
       List<CartItemModel>? userCart;
       if (userCartJson != "null") {
         userCart = [];
-        userCartJson.forEach((item) {
+        jsonDecode(userCartJson).forEach((item) {
           userCart!.add(CartItemModel.fromJson(item));
         });
       }

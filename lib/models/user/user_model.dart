@@ -19,7 +19,7 @@ class UserModel{
     List<CartItemModel>? parsedCart;
     if (json['cart'] != "null") {
       parsedCart = [];
-      json['cart'].forEach((item) {
+      jsonDecode(json['cart']).forEach((item) {
         parsedCart!.add(CartItemModel.fromJson(item));
       });
     }

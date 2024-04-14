@@ -50,4 +50,14 @@ class MockAuthService extends IAuthService{
   Future<void> logOut() async {
     //No implementation
   }
+
+  @override
+  Future<void> updateUser(UserModel user) async {
+    try{
+      await _userSqliteService.updateUser(user);
+    }
+    catch (e){
+      throw Exception('Failed to sign up: $e');
+    } 
+  }
 }

@@ -22,4 +22,19 @@ class MockProductService extends IProductService {
       throw Exception('Failed to load products: $e');
     }
   }
+
+  @override
+  Future<ProductModel> fetchProduct(int id) async {
+    try {
+      final response = await dio.get('products/$id');
+      if (response.statusCode == HttpStatus.ok) {
+        ProductModel product = ProductModel.fromJson(response.data);
+        return product;
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      throw Exception('Failed to load products: $e');
+    }
+  }
 }

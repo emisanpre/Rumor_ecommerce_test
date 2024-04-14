@@ -1,6 +1,6 @@
 class CartItemModel {
-  final int productId;
-  final int quantity;
+  int productId = 0;
+  int quantity = 0;
 
   CartItemModel({required this.productId, required this.quantity});
 
