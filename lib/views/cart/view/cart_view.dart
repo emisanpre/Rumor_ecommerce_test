@@ -71,7 +71,7 @@ class _CartViewState extends State<CartView> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      icon: const Icon(Icons.minimize),
+                                      icon: const Icon(Icons.remove),
                                       onPressed: () {
                                         _cartViewModel.decrementQuantity(index);
                                         setState(() {});

@@ -99,6 +99,14 @@ mixin _$CartViewModel on CartViewModelBase, Store {
         .run(() => super.fetchCartProductsService());
   }
 
+  late final _$updateUserServiceAsyncAction =
+      AsyncAction('CartViewModelBase.updateUserService', context: context);
+
+  @override
+  Future<void> updateUserService() {
+    return _$updateUserServiceAsyncAction.run(() => super.updateUserService());
+  }
+
   late final _$CartViewModelBaseActionController =
       ActionController(name: 'CartViewModelBase', context: context);
 
