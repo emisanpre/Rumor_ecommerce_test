@@ -47,6 +47,7 @@ Now that you have cloned the repository and installed the dependencies, you can 
   ```bash
   flutter run
   ```
+For better debugging, run the app with the VsCode plugins. Learn how [here](https://docs.flutter.dev/tools/vs-code#running-and-debugging).
 
 ## Testing
 
