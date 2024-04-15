@@ -47,7 +47,7 @@ Now that you have cloned the repository and installed the dependencies, you can 
   ```bash
   flutter run
   ```
-For better debugging, run the app with the VsCode plugins. Learn how [here](https://docs.flutter.dev/tools/vs-code#running-and-debugging).
+For better debugging, run the app with the VSCode plugins. Learn how [here](https://docs.flutter.dev/tools/vs-code#running-and-debugging).
 
 ## Testing
 
@@ -55,4 +55,4 @@ To run tests, use the following command:
   ```bash
   flutter test
   ```
-Note: If tests fails for some reason please run the tests with the VsCode plugins. Learn how [here](https://docs.flutter.dev/cookbook/testing/unit/introduction#6-run-the-tests).
+Note: If tests fails for some reason please run the tests with the VSCode plugins. Learn how [here](https://docs.flutter.dev/cookbook/testing/unit/introduction#6-run-the-tests).
