@@ -5,8 +5,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/network/dio_manager.dart';
-import '../../../core/services/auth/mock_auth_service.dart';
-import '../../../core/services/product/mock_product_service.dart';
+import '../../../core/services/auth/auth_service.dart';
+import '../../../core/services/auth/i_auth_service.dart';
+import '../../../core/services/product/i_product_service.dart';
+import '../../../core/services/product/product_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/widgets/product_grid.dart';
 import '../../auth/view/auth_view.dart';
@@ -14,19 +16,33 @@ import '../../cart/view/cart_view.dart';
 import '../viewModel/home_view_model.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({super.key, this.productService, this.authService});
+
+  final IProductService? productService;
+  final IAuthService? authService;
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  final HomeViewModel _homeViewModel = HomeViewModel(
-    MockProductService(DioManager.instance.dio),
-    MockAuthService(DioManager.instance.dio)
-  );
+  late HomeViewModel _homeViewModel;
 
   Timer? _debounce;
+
+  @override
+  void initState() {
+    if(widget.authService == null){
+      _homeViewModel = HomeViewModel(
+        ProductService(DioManager.instance.dio),
+        AuthService(DioManager.instance.dio)
+      );
+    }
+    else{
+      _homeViewModel = HomeViewModel(widget.productService!, widget.authService!);
+    } 
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

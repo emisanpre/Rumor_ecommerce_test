@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/network/dio_manager.dart';
-import '../../../core/services/auth/mock_auth_service.dart';
+import '../../../core/services/auth/i_auth_service.dart';
+import '../../../core/services/auth/auth_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../home/view/home_view.dart';
 import '../viewModel/auth_view_model.dart';
 
 
 class AuthView extends StatefulWidget {
-  const AuthView({super.key});
+  const AuthView({super.key, this.authService});
+
+  final IAuthService? authService;
 
   @override
   State<AuthView> createState() => _AuthViewState();
 }
 
 class _AuthViewState extends State<AuthView> {
-  final AuthViewModel _authViewModel = AuthViewModel(MockAuthService(DioManager.instance.dio));
+  late AuthViewModel _authViewModel;
 
   final GlobalKey<FormState> _signInFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _signUpFormKey = GlobalKey<FormState>();
@@ -29,6 +32,17 @@ class _AuthViewState extends State<AuthView> {
   String _signUpName = '';
   String _signUpEmail = '';
   String _signUpPassword = '';
+
+  @override
+  void initState() {
+    if(widget.authService == null){
+      _authViewModel = AuthViewModel(AuthService(DioManager.instance.dio));
+    }
+    else{
+      _authViewModel = AuthViewModel(widget.authService!);
+    } 
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +130,7 @@ class _AuthViewState extends State<AuthView> {
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
+                            key: const ValueKey('signInButton'),
                             onPressed: () => _submitSignIn(context),
                             child: const Text('Sign In'),
                           ),
@@ -223,6 +238,7 @@ class _AuthViewState extends State<AuthView> {
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
+                            key: const ValueKey('signUpButton'),
                             onPressed: () => _submitSignUp(context),
                             child: const Text('Sign Up'),
                           ),

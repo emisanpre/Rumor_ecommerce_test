@@ -7,8 +7,8 @@ import '../../../models/user/user_model.dart';
 import '../sqlite/user_sqlite_service.dart';
 import 'i_auth_service.dart';
 
-class MockAuthService extends IAuthService{
-  MockAuthService(super.dio);
+class AuthService extends IAuthService{
+  AuthService(super.dio);
   final UserSqliteService _userSqliteService = UserSqliteService();
 
   @override

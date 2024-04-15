@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/network/dio_manager.dart';
-import '../../../core/services/auth/mock_auth_service.dart';
+import '../../../core/services/auth/auth_service.dart';
 import '../../../core/services/service_state.dart';
 import '../../../core/widgets/rating_view.dart';
 import '../../../models/product/product_model.dart';
@@ -14,7 +14,7 @@ class ProductView extends StatelessWidget {
 
   final ProductModel product;
   late final ProductViewModel _productViewModel = ProductViewModel( 
-    MockAuthService(DioManager.instance.dio),
+    AuthService(DioManager.instance.dio),
     product
   );
   

@@ -3,8 +3,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../core/managers/user/user_data_manager.dart';
 import '../../../core/network/dio_manager.dart';
-import '../../../core/services/auth/mock_auth_service.dart';
-import '../../../core/services/product/mock_product_service.dart';
+import '../../../core/services/auth/auth_service.dart';
+import '../../../core/services/product/product_service.dart';
 import '../../../core/services/service_state.dart';
 import '../viewModel/cart_view_model.dart';
 
@@ -17,8 +17,8 @@ class CartView extends StatefulWidget {
 
 class _CartViewState extends State<CartView> {
   final CartViewModel _cartViewModel = CartViewModel(
-    MockProductService(DioManager.instance.dio), 
-    MockAuthService(DioManager.instance.dio)
+    ProductService(DioManager.instance.dio), 
+    AuthService(DioManager.instance.dio)
   );
 
   @override
