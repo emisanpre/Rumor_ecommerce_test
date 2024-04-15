@@ -15,6 +15,8 @@ import 'widget_test.mocks.dart';
 
 @GenerateMocks([IAuthService, IProductService])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  
   late IAuthService authService;
   late IProductService productService;
 
