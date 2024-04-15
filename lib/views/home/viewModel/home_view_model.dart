@@ -22,6 +22,12 @@ abstract class HomeViewModelBase with Store {
   List<ProductModel> products = [];
 
   @observable
+  List<ProductModel> filteredProducts = [];
+
+  @observable
+  String searchText = '';
+
+  @observable
   ServiceState serviceState = ServiceState.normal;
 
   @observable
@@ -32,8 +38,33 @@ abstract class HomeViewModelBase with Store {
     serviceState = ServiceState.loading;
     try {
       products = await productService.fetchProducts();
+      filteredProducts = products;
       serviceState = ServiceState.success;
     } on Exception catch (e) {
+      errorMessage = e.toString().replaceAll('Exception:', '');
+      serviceState = ServiceState.error;
+    } catch (e) {
+      errorMessage = e.toString();
+      serviceState = ServiceState.error;
+    }
+  }
+
+  @action
+  Future<void> filterProductsService() async{
+    try {
+      filteredProducts = searchText.isNotEmpty 
+        ? products
+            .where(
+              (product) => product.title.toLowerCase().contains(searchText.toLowerCase())
+            )
+            .toList()
+        : products;
+
+      if(filteredProducts.isEmpty){
+        filteredProducts = products;
+      }
+        
+    }on Exception catch (e) {
       errorMessage = e.toString().replaceAll('Exception:', '');
       serviceState = ServiceState.error;
     } catch (e) {

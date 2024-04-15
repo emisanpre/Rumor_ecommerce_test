@@ -253,7 +253,7 @@ class _AuthViewState extends State<AuthView> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomeView()),
+              MaterialPageRoute(builder: (context) => const HomeView()),
             );
           });
           return const SizedBox.shrink();

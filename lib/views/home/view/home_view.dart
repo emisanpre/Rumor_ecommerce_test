@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -11,13 +13,20 @@ import '../../auth/view/auth_view.dart';
 import '../../cart/view/cart_view.dart';
 import '../viewModel/home_view_model.dart';
 
-class HomeView extends StatelessWidget {
-  HomeView({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   final HomeViewModel _homeViewModel = HomeViewModel(
     MockProductService(DioManager.instance.dio),
     MockAuthService(DioManager.instance.dio)
   );
+
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +39,7 @@ class HomeView extends StatelessWidget {
         switch (_homeViewModel.serviceState) {
           case ServiceState.loading:
             return Scaffold(
-              appBar: AppBar(
-                title: Text("Welcome ${UserDataManager.user!.name}!"),
-              ),
+              appBar: AppBar(),
               body: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -51,12 +58,35 @@ class HomeView extends StatelessWidget {
             return Scaffold(
               extendBody: true,
               appBar: AppBar(
-                title: Text("Welcome ${UserDataManager.user!.name}!"),
+                title: TextField(
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                  ),
+                  cursorColor: Colors.white,
+                  decoration: const InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white54
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (value) {
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      _homeViewModel.searchText = value;
+                      _homeViewModel.filterProductsService();
+                    });
+                  },
+                ),
               ),
               body: ProductGrid(
-                products: _homeViewModel.products,
+                products: _homeViewModel.filteredProducts,
                 onRefresh: () async {
                   await _homeViewModel.fetchAllProductService();
+                  _homeViewModel.searchText = '';
                 },
               ),
               floatingActionButton: Stack(
@@ -96,6 +126,17 @@ class HomeView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    SizedBox(
+                      width: 150,
+                      child: Text(
+                        "Welcome ${UserDataManager.user!.name.split(' ').first}!",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                     const Spacer(),
                     IconButton(
                       color: Colors.white,

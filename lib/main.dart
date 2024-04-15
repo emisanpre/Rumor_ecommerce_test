@@ -10,7 +10,7 @@ void main(){
       highlightColor: Colors.blueAccent,
       appBarTheme: const AppBarTheme(
         color: Colors.lightBlue,
-        titleTextStyle: TextStyle(
+        titleTextStyle:  TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),

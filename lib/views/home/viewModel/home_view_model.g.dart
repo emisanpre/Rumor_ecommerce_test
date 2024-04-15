@@ -25,6 +25,38 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
     });
   }
 
+  late final _$filteredProductsAtom =
+      Atom(name: 'HomeViewModelBase.filteredProducts', context: context);
+
+  @override
+  List<ProductModel> get filteredProducts {
+    _$filteredProductsAtom.reportRead();
+    return super.filteredProducts;
+  }
+
+  @override
+  set filteredProducts(List<ProductModel> value) {
+    _$filteredProductsAtom.reportWrite(value, super.filteredProducts, () {
+      super.filteredProducts = value;
+    });
+  }
+
+  late final _$searchTextAtom =
+      Atom(name: 'HomeViewModelBase.searchText', context: context);
+
+  @override
+  String get searchText {
+    _$searchTextAtom.reportRead();
+    return super.searchText;
+  }
+
+  @override
+  set searchText(String value) {
+    _$searchTextAtom.reportWrite(value, super.searchText, () {
+      super.searchText = value;
+    });
+  }
+
   late final _$serviceStateAtom =
       Atom(name: 'HomeViewModelBase.serviceState', context: context);
 
@@ -66,6 +98,15 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
         .run(() => super.fetchAllProductService());
   }
 
+  late final _$filterProductsServiceAsyncAction =
+      AsyncAction('HomeViewModelBase.filterProductsService', context: context);
+
+  @override
+  Future<void> filterProductsService() {
+    return _$filterProductsServiceAsyncAction
+        .run(() => super.filterProductsService());
+  }
+
   late final _$logOutServiceAsyncAction =
       AsyncAction('HomeViewModelBase.logOutService', context: context);
 
@@ -78,6 +119,8 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
   String toString() {
     return '''
 products: ${products},
+filteredProducts: ${filteredProducts},
+searchText: ${searchText},
 serviceState: ${serviceState},
 errorMessage: ${errorMessage}
     ''';
