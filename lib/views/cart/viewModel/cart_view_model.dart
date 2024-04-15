@@ -12,25 +12,41 @@ import '../../../models/user/user_model.dart';
 
 part 'cart_view_model.g.dart';
 
+/// ViewModel for managing the user's shopping cart.
+///
+/// This class handles operations related to the user's shopping cart,
+/// including fetching cart products, updating quantities, deleting items,
+/// calculating total price, and checking out.
 class CartViewModel = CartViewModelBase with _$CartViewModel;
 
 abstract class CartViewModelBase with Store {
+  /// Creates an instance of [CartViewModel].
+  ///
+  /// [productService]: Product service.
+  /// [authService]: Authentication service.
   CartViewModelBase(this.productService, this.authService){
     fetchCartProductsService();
   }
 
+  /// Product service used to fetch product details.
   final IProductService productService;
+
+  /// Authentication service used to update user data.
   final IAuthService authService;
 
+  /// List of products in the user's shopping cart.
   @observable
   List<ProductModel> products = [];
 
+  /// State of the cart service.
   @observable
   ServiceState serviceState = ServiceState.normal;
 
+  /// Error message displayed in case an error occurs during cart operations.
   @observable
   String errorMessage = "An error has ocurred";
 
+  /// Fetches products in the user's shopping cart.
   @action
   Future<void> fetchCartProductsService() async {
     UserModel user = UserDataManager.user!;
@@ -51,6 +67,7 @@ abstract class CartViewModelBase with Store {
     }
   }
 
+  /// Increments the quantity of a product in the cart.
   @action
   void incrementQuantity(int index) {
     UserModel user = UserDataManager.user!;
@@ -60,6 +77,8 @@ abstract class CartViewModelBase with Store {
     }
   }
 
+  /// Decrements the quantity of a product in the cart. 
+  /// If quantity is less or equal than zero, deletes the product from shoppinng cart.
   @action
   Future<void> decrementQuantity(int index) async {
     UserModel user = UserDataManager.user!;
@@ -73,6 +92,7 @@ abstract class CartViewModelBase with Store {
     }
   }
 
+  /// Deletes an product from the cart.
   @action
   Future<void> deleteItem(int index) async {
     UserModel user = UserDataManager.user!;
@@ -84,6 +104,7 @@ abstract class CartViewModelBase with Store {
     }
   }
 
+  /// Calculates the total price of all products in the cart.
   @action
   double calulateTotal(){
     double total = 0.0;
@@ -93,6 +114,7 @@ abstract class CartViewModelBase with Store {
     return total;
   }
 
+  /// Simulates the check out of the items in the cart.
   @action
   Future<void> checkOut() async{
     try {
@@ -116,6 +138,7 @@ abstract class CartViewModelBase with Store {
     }
   }
 
+  /// Updates user data after cart changes.
   @action
   Future<void> updateUserService() async {
     serviceState = ServiceState.loading;

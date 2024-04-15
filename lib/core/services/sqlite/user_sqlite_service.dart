@@ -5,8 +5,14 @@ import '../../../models/user/user_model.dart';
 import '../../utils/encrypt.dart';
 import 'sqlite_service.dart';
 
+  /// Service class for managing user data in SQLite database.
+  ///
+  /// This class provides methods for CRUD operations on user data in the SQLite database.
 class UserSqliteService extends SqliteService{
 
+  /// Retrieves user data from the database based on email.
+  ///
+  /// Returns a [UserModel] object representing the user if found, otherwise returns null.
   Future<UserModel?> user(String email) async {
     final db = await database;
 
@@ -40,6 +46,10 @@ class UserSqliteService extends SqliteService{
     }
   }
 
+  /// Inserts a new user into the database.
+  ///
+  /// [user]: User data to insert.
+  /// [password]: User's password to encrypt and insert.
   Future<void> insertUser(UserModel user, String password) async {
     final db = await database;
 
@@ -63,6 +73,10 @@ class UserSqliteService extends SqliteService{
 
   }
 
+  /// Updates an existing user in the database.
+  ///
+  /// [user]: Updated user data.
+  /// [password]: New password to encrypt and update.
   Future<void> updateUser(UserModel user, {String? password}) async {
     final db = await database;
 
@@ -104,6 +118,9 @@ class UserSqliteService extends SqliteService{
     );
   }
 
+  /// Deletes a cart item from the database.
+  ///
+  /// [cartItem]: Cart item to delete.
   Future<void> deleteCartItem(CartItemModel cartItem) async {
     final db = await database;
 
@@ -114,6 +131,9 @@ class UserSqliteService extends SqliteService{
     );
   }
 
+  /// Verifies user credentials by comparing the provided password with the stored hashed password.
+  ///
+  /// Returns true if the provided password matches the stored hashed password, otherwise returns false.
   Future<bool> verifyCredentials(String email, String password) async {
     final db = await database;
 

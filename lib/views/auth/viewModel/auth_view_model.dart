@@ -10,24 +10,41 @@ import '../../../models/user/user_model.dart';
 
 part 'auth_view_model.g.dart';
 
+/// ViewModel for user authentication management.
+///
+/// This class handles logic related to user authentication,
+/// including login and registration, as well as authentication state
+/// and potential errors.
 class AuthViewModel = AuthViewModelBase with _$AuthViewModel;
 
 abstract class AuthViewModelBase with Store {
+
+  /// Creates an instance of [AuthViewModel].
+  ///
+  /// [authService]: Authentication service.
   AuthViewModelBase(this.authService){
     _init();
   }
 
+  /// Authentication service used to perform auth operations.
   final IAuthService authService;
 
+  /// Indicates whether the user is authenticated or not.
   @observable
   bool isAuth = false;
 
+  /// Authentication service state.
   @observable
   ServiceState serviceState = ServiceState.normal;
   
+  /// Error message displayed in case an error occurs during the authentication process.
   @observable
   String errorMessage = "An error has ocurred";
 
+  /// Performs user login using the provided email and password.
+  ///
+  /// [email]: User's email.
+  /// [password]: User's password.
   @action
   Future<void> signInService(String email, String password) async {
     serviceState = ServiceState.loading;
@@ -48,6 +65,11 @@ abstract class AuthViewModelBase with Store {
     }
   }
 
+  /// Registers a new user using the provided name, email, and password.
+  ///
+  /// [name]: User's name.
+  /// [email]: User's email.
+  /// [password]: User's password.
   @action
   Future<void> signUpService(String name, String email, String password) async {
     serviceState = ServiceState.loading;
@@ -68,6 +90,7 @@ abstract class AuthViewModelBase with Store {
     }
   }
 
+  /// Initializes the ViewModel state, loading the authenticated user if it exists.
   Future<void> _init() async {
     String? userString = await SecureStorageHelper.getData(key: 'authUser');
     userString != null 
