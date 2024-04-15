@@ -2,6 +2,8 @@
 
 Welcome to Rumor Ecommerce Test! This README will guide you through the steps to run the application on your local machine.
 
+[App Working Video](https://youtu.be/-EFK2A9oMWw)
+
 ## Why MVVM Architecture with MobX?
 The MVVM (Model-View-ViewModel) architecture is a common choice for frontend applications due to its ability to clearly separate the presentation logic from the underlying data. MVVM promotes a clear separation between business logic (Model), user interface presentation (View), and the logic connecting both (ViewModel).
 
