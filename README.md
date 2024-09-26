@@ -32,7 +32,7 @@ To get a local copy up and running follow these simple steps:
 
 1. Clone the repository to your local machine:
     ```bash
-    git clone https://github.com/EmilioSantillana/Rumor_ecommerce_test.git
+    git clone https://github.com/emisanpre/Rumor_ecommerce_test.git
     ```
 2. Navigate to the project directory:
     ```bash
